@@ -22,17 +22,17 @@ Copy the https://... URL and update it in the Meta Developer Console.
 
 4. Configure Webhook in Meta Console
 
- - Go to Meta Developer Console.
+  - Go to Meta Developer Console.
 
- - Navigate to WhatsApp > Configuration.
+  - Navigate to WhatsApp > Configuration.
 
- - Set Webhook URL to: https://<YOUR_NGROK_URL>/webhook.
+  - Set Webhook URL to: https://<YOUR_NGROK_URL>/webhook.
 
- - Subscribe to the messages event.
+  - Subscribe to the messages event.
 
 5. Verify Webhook (GET Request)
 
-Meta will call /webhook for verification. Ensure VERIFY_TOKEN in main.py matches the one set in Meta.
+   - Meta will call /webhook for verification. Ensure VERIFY_TOKEN in main.py matches the one set in Meta.
 
 ## API Endpoints
 

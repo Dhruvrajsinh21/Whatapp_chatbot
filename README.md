@@ -17,8 +17,8 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 3. Setup Ngrok (For Public URL)
 ```bash
 ngrok http 8000
+#Copy the https://... URL and update it in the Meta Developer Console.
 ```
-Copy the https://... URL and update it in the Meta Developer Console.
 
 4. Configure Webhook in Meta Console
 

@@ -1,6 +1,4 @@
-# Whatapp_chatbot
-
-WhatsApp Chatbot using FastAPI
+# WhatsApp Chatbot using FastAPI
 
 This project is a WhatsApp chatbot built using FastAPI and the Meta WhatsApp Cloud API.
 

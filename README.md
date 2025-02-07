@@ -38,10 +38,10 @@ ngrok http 8000
 
 1. Verify Webhook
 
-GET /webhook?hub.mode=subscribe&hub.challenge=123456&hub.verify_token=abc
+   - GET /webhook?hub.mode=subscribe&hub.challenge=123456&hub.verify_token=abc
 
 2. Receive WhatsApp Messages (POST)
 
-POST /webhook
+   - POST /webhook
 
 Logs incoming messages and sends an automated response.

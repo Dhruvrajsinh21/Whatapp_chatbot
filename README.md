@@ -7,12 +7,14 @@ This project is a WhatsApp chatbot built using FastAPI and the Meta WhatsApp Clo
 ## Setup Instructions
 
 1. Install Dependencies
-
+```bash
 pip install fastapi uvicorn requests
+```
 
 2. Start FastAPI Server
-
+```bash
 uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+```
 
 3. Setup Ngrok (For Public URL)
 ```bash

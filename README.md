@@ -1,4 +1,4 @@
-**# WhatsApp Business API Endpoints and Usage**
+# WhatsApp Business API Endpoints and Usage
 
 ## 1. **Phone Number Information**
 **Endpoint:**  

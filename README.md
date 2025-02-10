@@ -152,7 +152,3 @@ POST https://graph.facebook.com/v18.0/<PHONE_NUMBER_ID>/settings
 }
 ```
 
----
-
-**This document provides a reference for key WhatsApp Business API endpoints. Let me know if you need additional details!**
-

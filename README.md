@@ -1,47 +1,158 @@
-# WhatsApp Chatbot using FastAPI
+**# WhatsApp Business API Endpoints and Usage**
 
-This project is a WhatsApp chatbot built using FastAPI and the Meta WhatsApp Cloud API.
+## 1. **Phone Number Information**
+**Endpoint:**  
+```
+GET https://graph.facebook.com/v18.0/<PHONE_NUMBER_ID>
+```
+**Purpose:**  
+- Retrieves details about the registered phone number, including its display name and verification status.  
 
-## Setup Instructions
-
-1. Install Dependencies
-```bash
-pip install fastapi uvicorn requests
+**Response Example:**  
+```json
+{
+  "id": "PHONE_NUMBER_ID",
+  "display_phone_number": "+1234567890",
+  "verified_name": "Your Business Name"
+}
 ```
 
-2. Start FastAPI Server
-```bash
-uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+---
+
+## 2. **Send a Message**
+**Endpoint:**  
+```
+POST https://graph.facebook.com/v18.0/<PHONE_NUMBER_ID>/messages
+```
+**Purpose:**  
+- Sends text, images, videos, or template messages to users.  
+
+**Request Example (Text Message):**  
+```json
+{
+  "messaging_product": "whatsapp",
+  "to": "+1234567890",
+  "type": "text",
+  "text": { "body": "Hello! This is an automated response." }
+}
 ```
 
-3. Setup Ngrok (For Public URL)
-```bash
-ngrok http 8000
-#Copy the https://... URL and update it in the Meta Developer Console.
+**Response Example:**  
+```json
+{
+  "messages": [{ "id": "wamid.123456" }]
+}
 ```
 
-4. Configure Webhook in Meta Console
+---
 
-   - Go to Meta Developer Console.
+## 3. **Send a Template Message**  
+**Request Example:**  
+```json
+{
+  "messaging_product": "whatsapp",
+  "to": "+1234567890",
+  "type": "template",
+  "template": {
+    "name": "order_confirmation",
+    "language": { "code": "en_US" },
+    "components": [{
+      "type": "body",
+      "parameters": [{ "type": "text", "text": "Order #12345" }]
+    }]
+  }
+}
+```
 
-   - Navigate to WhatsApp > Configuration.
+---
 
-   - Set Webhook URL to: https://<YOUR_NGROK_URL>/webhook.
+## 4. **Manage Message Templates**
+**Endpoint (List Templates):**  
+```
+GET https://graph.facebook.com/v18.0/<WHATSAPP_BUSINESS_ACCOUNT_ID>/message_templates
+```
+**Purpose:**  
+- Fetches all pre-approved message templates.  
 
-   - Subscribe to the messages event.
+**Response Example:**  
+```json
+{
+  "data": [
+    {
+      "name": "order_confirmation",
+      "status": "APPROVED",
+      "language": "en_US"
+    }
+  ]
+}
+```
 
-5. Verify Webhook (GET Request)
+---
 
-   - Meta will call /webhook for verification. Ensure VERIFY_TOKEN in main.py matches the one set in Meta.
+## 5. **Upload and Manage Media**
+**Endpoint (Upload Media):**  
+```
+POST https://graph.facebook.com/v18.0/<PHONE_NUMBER_ID>/media
+```
+**Purpose:**  
+- Uploads media files (images, videos, documents) for use in messages.  
 
-## API Endpoints
+**Request Example:**  
+```json
+{
+  "file": "https://yourdomain.com/image.jpg",
+  "type": "image/jpeg"
+}
+```
 
-1. Verify Webhook
+**Response Example:**  
+```json
+{
+  "id": "MEDIA_ID"
+}
+```
 
-   - GET /webhook?hub.mode=subscribe&hub.challenge=123456&hub.verify_token=abc
+**Endpoint (Retrieve Media Info):**  
+```
+GET https://graph.facebook.com/v18.0/<MEDIA_ID>
+```
 
-2. Receive WhatsApp Messages (POST)
+---
 
-   - POST /webhook
+## 6. **Get Message Status**
+**Endpoint:**  
+```
+GET https://graph.facebook.com/v18.0/<MESSAGE_ID>
+```
+**Purpose:**  
+- Checks the delivery status of a sent message.  
 
-Logs incoming messages and sends an automated response.
+**Response Example:**  
+```json
+{
+  "id": "MESSAGE_ID",
+  "status": "delivered"
+}
+```
+
+---
+
+## 7. **Manage WhatsApp Business Profile**
+**Endpoint (Update Profile):**  
+```
+POST https://graph.facebook.com/v18.0/<PHONE_NUMBER_ID>/settings
+```
+**Purpose:**  
+- Updates the business profile (name, description, etc.).  
+
+**Request Example:**  
+```json
+{
+  "about": "We provide the best customer service."
+}
+```
+
+---
+
+**This document provides a reference for key WhatsApp Business API endpoints. Let me know if you need additional details!**
+

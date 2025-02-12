@@ -1,7 +1,7 @@
 ## Branches 
 
 - **`main`** - WhatsApp chatbot built using FastAPI.
-- **`Documentation_WhatsappAPIs`** - Made a demo for image-to-thumbnail conversion and renaming using kafka.
+- **`Documentation_WhatsappAPIs`** - Documented the WhatsApp Cloud APIs.
 
 # WhatsApp Chatbot using FastAPI
 

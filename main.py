@@ -5,12 +5,20 @@ import json
 app = FastAPI()
 
 # WhatsApp API Credentials (Replace with actual values)
-PHONE_NUMBER_ID = "NA"
-ACCESS_TOKEN = "EAAJOI60HSKcBO8KS9WDeSDQykyfTSPUW8apZBePvKa6F5CHu2BnUdT2jCPTBJBtId4Nq63y5AFD9BpW26zFaOnhZAzJHYqO9n1ezmfrsiGrnN6wP9thBeySqZATkNwa7TTGUvkFUm1DRZATasZBUTwFXPY8aj62tWDHcTumyoGZAZAccvEy5D24JRIAn6KWyikJ8QCwiv5uxgNIZAwSwKxPb09JexZCSXEk8XF70ZD"
-VERIFY_TOKEN = "abc"  # Choose any string
+PHONE_NUMBER_ID = "YOUR_PHONE_NUMBER_ID"
+ACCESS_TOKEN = "YOUR_ACCESS_TOKEN"
+VERIFY_TOKEN = "YOUR_VERIFY_TOKEN"
 WHATSAPP_API_URL = f"https://graph.facebook.com/v18.0/{PHONE_NUMBER_ID}/messages"
 
-# Step 1: Verify Webhook (Meta Calls This to Verify)
+# Predefined document links
+DOCUMENTS = {
+    "brochure": "https://www.example.com/brochure.pdf",
+    "pricing": "https://www.example.com/pricing.pdf",
+    "catalog": "https://www.example.com/catalog.pdf"
+}
+
+
+# Step 1: Webhook Verification (Meta Calls This)
 @app.get("/webhook")
 def verify_webhook(
     hub_mode: str = Query(None, alias="hub.mode"),
@@ -18,10 +26,11 @@ def verify_webhook(
     hub_verify_token: str = Query(None, alias="hub.verify_token")
 ):
     if hub_mode == "subscribe" and hub_verify_token == VERIFY_TOKEN:
-        return int(hub_challenge)  # Meta requires integer response
+        return int(hub_challenge)  # Meta requires an integer response
     return {"status": "Verification failed"}
 
-# Step 2: Receive Messages from WhatsApp
+
+# Step 2: Receive Messages from WhatsApp & Auto-Respond
 @app.post("/webhook")
 async def whatsapp_webhook(request: Request):
     data = await request.json()
@@ -32,35 +41,67 @@ async def whatsapp_webhook(request: Request):
     if "messages" in changes:
         message = changes["messages"][0]  # Get first message
         sender = message["from"]
-        text = message.get("text", {}).get("body", "")
+        text = message.get("text", {}).get("body", "").strip().lower()
 
-        # Process the received message
-        reply_text = process_message(text)
-        send_whatsapp_message(sender, reply_text)
+        # Check if user requested a document
+        if text in DOCUMENTS:
+            send_whatsapp_message(sender, document_url=DOCUMENTS[text], document_caption=f"Here is your requested {text}")
+        else:
+            reply_text = process_message(text)
+            send_whatsapp_message(sender, text=reply_text)
 
     return {"status": "received"}
 
 
-# Step 3: Send WhatsApp Message
-def send_whatsapp_message(to, text):
-    payload = {
-        "messaging_product": "whatsapp",
-        "to": to,
-        "type": "text",
-        "text": {"body": text}
-    }
+# Step 3: Function to Send Text or Document
+def send_whatsapp_message(to, text=None, document_url=None, document_caption=None):
     headers = {
         "Authorization": f"Bearer {ACCESS_TOKEN}",
         "Content-Type": "application/json"
     }
-    response = requests.post(WHATSAPP_API_URL, json=payload, headers=headers)
-    print(response.json())
 
-# Step 4: Process Incoming Messages (Simple Reply)
+    # Send text message (if provided)
+    if text:
+        text_payload = {
+            "messaging_product": "whatsapp",
+            "to": to,
+            "type": "text",
+            "text": {"body": text}
+        }
+        text_response = requests.post(WHATSAPP_API_URL, json=text_payload, headers=headers)
+        print("Text Response:", text_response.json())
+
+    # Send document (if requested)
+    if document_url:
+        document_payload = {
+            "messaging_product": "whatsapp",
+            "to": to,
+            "type": "document",
+            "document": {
+                "link": document_url,  # Direct URL to the document
+                "caption": document_caption  # Optional caption
+            }
+        }
+        doc_response = requests.post(WHATSAPP_API_URL, json=document_payload, headers=headers)
+        print("Document Response:", doc_response.json())
+
+
+# Step 4: Process Incoming Messages (Simple Replies)
 def process_message(text):
-    if text.lower() == "hi":
-        return "Hello! How can I help you?"
-    elif text.lower() == "bye":
+    if text == "hi":
+        return "Hello! How can I assist you?"
+    elif text == "bye":
         return "Goodbye! Have a great day!"
     else:
         return f"You said: {text}"
+
+
+# Test Route to Simulate a Message Request
+@app.get("/test-message/")
+def test_message(to: str, text: str):
+    if text.lower() in DOCUMENTS:
+        send_whatsapp_message(to, document_url=DOCUMENTS[text.lower()], document_caption=f"Here is your requested {text}")
+    else:
+        reply_text = process_message(text)
+        send_whatsapp_message(to, text=reply_text)
+    return {"status": "Test message sent"}

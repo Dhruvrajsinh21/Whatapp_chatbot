@@ -1,7 +1,9 @@
-# WhatsApp Business API Endpoints
+** This branch contains documentation, a link to the official Postman collection, and important Meta API endpoints. **
 
 ## Official Postman Collection link (referred):
 https://gold-trinity-812977.postman.co/workspace/My-Workspace~b4dd7082-bed7-4e30-8609-aec9a65ac7fd/collection/34688781-70103586-a21a-4d14-807c-a6124dedaeb7?action=share&creator=34688781
+
+# Important Meta API endpoint
 
 ## 1. **Phone Number Information**
 **Endpoint:**  

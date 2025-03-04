@@ -42,10 +42,12 @@ ngrok http 8000
 ## API Endpoints
 
 1. Verify Webhook
+   '''console
 
    - GET /webhook?hub.mode=subscribe&hub.challenge=123456&hub.verify_token=abc
+     '''
 
-2. Receive WhatsApp Messages (POST)
+3. Receive WhatsApp Messages (POST)
 
    - POST /webhook
 

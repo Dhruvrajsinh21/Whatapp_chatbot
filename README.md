@@ -1,11 +1,12 @@
 ## Branches 
 
 - **`main`** - WhatsApp chatbot built using FastAPI.
-- **`Documentation_WhatsappAPIs`** - Documented the WhatsApp Cloud APIs.
+- **`Documentation_WhatsappAPIs`** - Documented the WhatsApp Cloud APIs(Meta APIs).
 
 # WhatsApp Chatbot using FastAPI
 
-This project is a WhatsApp chatbot built using FastAPI and the Meta WhatsApp Cloud API.
+This project is a demo of WhatsApp chatbot built using custom method using FastAPI and the Meta WhatsApp Cloud API.
+- Video link: https://drive.google.com/file/d/10ijkYXhgWzQLeYPMHTIU_ZG2q95Egb_9/view?usp=sharing
 
 ## Setup Instructions
 
@@ -42,11 +43,11 @@ ngrok http 8000
 ## API Endpoints
 
 1. Verify Webhook
-   
-   - GET /webhook?hub.mode=subscribe&hub.challenge=123456&hub.verify_token=abc
-
-3. Receive WhatsApp Messages (POST)
-
-   - POST /webhook
-
+```bash
+   GET /webhook?hub.mode=subscribe&hub.challenge=123456&hub.verify_token=abc
+```
+2. Receive WhatsApp Messages (POST)
+```bash
+   POST /webhook
+```
 Logs incoming messages and sends an automated response.

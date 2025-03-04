@@ -6,7 +6,8 @@
 # WhatsApp Chatbot using FastAPI
 
 This project is a demo of WhatsApp chatbot built using custom method using FastAPI and the Meta WhatsApp Cloud API.
-- Video link: https://drive.google.com/file/d/10ijkYXhgWzQLeYPMHTIU_ZG2q95Egb_9/view?usp=sharing
+- Video link (setup): https://drive.google.com/file/d/1i6QioH2OdlWg29xF7z-sNLXl2mFKkqP-/view?usp=sharing
+- Video link (conversation): https://drive.google.com/file/d/10ijkYXhgWzQLeYPMHTIU_ZG2q95Egb_9/view?usp=sharing
 
 ## Setup Instructions
 

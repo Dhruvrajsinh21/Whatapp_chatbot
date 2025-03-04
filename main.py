@@ -4,21 +4,17 @@ import json
 
 app = FastAPI()
 
-# WhatsApp API Credentials (Replace with actual values)
 PHONE_NUMBER_ID = "YOUR_PHONE_NUMBER_ID"
 ACCESS_TOKEN = "YOUR_ACCESS_TOKEN"
 VERIFY_TOKEN = "YOUR_VERIFY_TOKEN"
 WHATSAPP_API_URL = f"https://graph.facebook.com/v18.0/{PHONE_NUMBER_ID}/messages"
 
-# Predefined document links
 DOCUMENTS = {
     "brochure": "https://www.example.com/brochure.pdf",
     "pricing": "https://www.example.com/pricing.pdf",
     "catalog": "https://www.example.com/catalog.pdf"
 }
 
-
-# Step 1: Webhook Verification (Meta Calls This)
 @app.get("/webhook")
 def verify_webhook(
     hub_mode: str = Query(None, alias="hub.mode"),
@@ -26,24 +22,20 @@ def verify_webhook(
     hub_verify_token: str = Query(None, alias="hub.verify_token")
 ):
     if hub_mode == "subscribe" and hub_verify_token == VERIFY_TOKEN:
-        return int(hub_challenge)  # Meta requires an integer response
+        return int(hub_challenge) 
     return {"status": "Verification failed"}
 
-
-# Step 2: Receive Messages from WhatsApp & Auto-Respond
 @app.post("/webhook")
 async def whatsapp_webhook(request: Request):
     data = await request.json()
     print("Received Data:", json.dumps(data, indent=2))
 
-    # Check if a message exists in the received data
     changes = data.get("entry", [{}])[0].get("changes", [{}])[0].get("value", {})
     if "messages" in changes:
-        message = changes["messages"][0]  # Get first message
+        message = changes["messages"][0]
         sender = message["from"]
         text = message.get("text", {}).get("body", "").strip().lower()
 
-        # Check if user requested a document
         if text in DOCUMENTS:
             send_whatsapp_message(sender, document_url=DOCUMENTS[text], document_caption=f"Here is your requested {text}")
         else:
@@ -52,15 +44,12 @@ async def whatsapp_webhook(request: Request):
 
     return {"status": "received"}
 
-
-# Step 3: Function to Send Text or Document
 def send_whatsapp_message(to, text=None, document_url=None, document_caption=None):
     headers = {
         "Authorization": f"Bearer {ACCESS_TOKEN}",
         "Content-Type": "application/json"
     }
 
-    # Send text message (if provided)
     if text:
         text_payload = {
             "messaging_product": "whatsapp",
@@ -71,22 +60,19 @@ def send_whatsapp_message(to, text=None, document_url=None, document_caption=Non
         text_response = requests.post(WHATSAPP_API_URL, json=text_payload, headers=headers)
         print("Text Response:", text_response.json())
 
-    # Send document (if requested)
     if document_url:
         document_payload = {
             "messaging_product": "whatsapp",
             "to": to,
             "type": "document",
             "document": {
-                "link": document_url,  # Direct URL to the document
-                "caption": document_caption  # Optional caption
+                "link": document_url, 
+                "caption": document_caption 
             }
         }
         doc_response = requests.post(WHATSAPP_API_URL, json=document_payload, headers=headers)
         print("Document Response:", doc_response.json())
 
-
-# Step 4: Process Incoming Messages (Simple Replies)
 def process_message(text):
     if text == "hi":
         return "Hello! How can I assist you?"
@@ -95,8 +81,6 @@ def process_message(text):
     else:
         return f"You said: {text}"
 
-
-# Test Route to Simulate a Message Request
 @app.get("/test-message/")
 def test_message(to: str, text: str):
     if text.lower() in DOCUMENTS:
